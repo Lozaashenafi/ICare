@@ -31,10 +31,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onToggleTheme, isDark, activeT
         <NavItem 
           icon={<LineChart size={20} />} 
           label="Statistics" 
-          active={activeTab === 'history'} 
-          onClick={() => onNavigate('history')} 
+          active={activeTab === 'stats'} 
+          onClick={() => onNavigate('stats')} 
         />
-        <NavItem icon={<Settings size={20} />} label="Settings" />
+        <NavItem 
+          icon={<Settings size={20} />}
+          label="settings"
+          active={activeTab === 'settings' }
+          onClick={() => onNavigate('settings')} 
+          />
         <NavItem icon={<Eye size={20} />} label="Smart Eye Mode" />
       </nav>
 

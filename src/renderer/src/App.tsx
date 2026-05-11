@@ -3,6 +3,11 @@ import { Sidebar } from './components/layout/Sidebar';
 import { TimerHero } from './components/dashboard/TimerHero';
 import { WatcherCard, StatsCard } from './components/dashboard/SidebarCards';
 import { HistoryPage } from './features/history/HistoryPage';
+import { StatsPage } from './features/stats/StatsPage';
+
+// If you have these components created, import them here:
+// import { StatisticsPage } from './features/stats/StatisticsPage';
+// import { SettingsPage } from './features/settings/SettingsPage';
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -19,7 +24,6 @@ function App() {
 
   return (
     <div className="flex h-screen bg-canvas text-text transition-colors duration-500">
-      
       <Sidebar 
         onToggleTheme={() => setIsDark(!isDark)} 
         isDark={isDark} 
@@ -48,7 +52,9 @@ function App() {
 
         <main className="flex-1 p-10 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
-            {activeTab === 'dashboard' ? (
+            
+            {/* 1. Dashboard View */}
+            {activeTab === 'dashboard' && (
               <div className="flex flex-col xl:flex-row gap-8 animate-in fade-in duration-500">
                  <div className="flex-[2] min-w-0"><TimerHero /></div>
                  <div className="flex-1 min-w-[300px] space-y-6">
@@ -56,11 +62,35 @@ function App() {
                     <StatsCard />
                  </div>
               </div>
-            ) : (
-              <HistoryPage />
             )}
+
+            {/* 2. Statistics View */}
+            {activeTab === 'stats' && (
+              <div className="animate-in fade-in duration-500">
+                <StatsPage />
+               </div>
+            )}
+
+            {/* 3. History View */}
+            {activeTab === 'history' && (
+              <div className="animate-in fade-in duration-500">
+                <HistoryPage />
+              </div>
+            )}
+
+            {/* 4. Settings View */}
+            {activeTab === 'settings' && (
+              <div className="animate-in fade-in duration-500">
+                <h2 className="text-2xl font-bold mb-4">Settings</h2>
+                <div className="p-8 border-2 border-dashed border-border rounded-xl">
+                  <p className="text-secondary">App configuration and user preferences go here.</p>
+                </div>
+              </div>
+            )}
+
           </div>
         </main>
+        
       </div>
     </div>
   );
