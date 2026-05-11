@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: #7C5CFC;
-  --color-eye: #00E5C3;
-  
-  /* Mood: White */
-  --color-canvas: #FDFDFD;
-  --color-sidebar: #F8F9FC;
-  --color-sidebar-hover: #E2E8F0;
-  --color-card-bg: #FFFFFF;
-  --color-border-main: #F1F5F9;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
+  /* BRAND COLORS */
+  --color-primary: #002147;    /* Main Oxford Blue */
+  --color-secondary: #64748B;  /* Slate for subtext */
+  --color-tertiary: #00E5C3;   /* Eye-care Green */
 
-  /* Mood: Black */
+  /* SEMANTIC MOODS */
+  --color-canvas: #FFFFFF;     /* Light Background */
+  --color-surface: #F8F9FB;    /* Sidebar/Card shades */
+  --color-border: #E2E8F0;     /* Line colors */
+  --color-text: #002147;       /* Default text matches primary */
+
   --variant-dark {
-    --color-canvas: #0A0A0F;
-    --color-sidebar: #111118;
-    --color-sidebar-hover: #1E293B;
-    --color-card-bg: #1C1C26;
-    --color-border-main: #1E293B;
-    --color-text-primary: #F8FAFC;
-    --color-text-secondary: #94A3B8;
+    --color-canvas: #000F21;   /* Deep Blue-Black */
+    --color-surface: #001835;  /* Slightly lighter Blue */
+    --color-border: #002B5B;
+    --color-text: #F8FAFC;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-canvas text-text transition-colors duration-300 font-sans;
   }
 }
