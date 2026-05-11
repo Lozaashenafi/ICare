@@ -1,27 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  /* BRAND COLORS */
-  --color-primary: #002147;    /* Main Oxford Blue */
-  --color-secondary: #64748B;  /* Slate for subtext */
-  --color-tertiary: #00E5C3;   /* Eye-care Green */
+  /* Brand Constants */
+  --color-primary: #002147;
+  --color-secondary: #64748B;
+  --color-tertiary: #00E5C3;
 
-  /* SEMANTIC MOODS */
-  --color-canvas: #FFFFFF;     /* Light Background */
-  --color-surface: #F8F9FB;    /* Sidebar/Card shades */
-  --color-border: #E2E8F0;     /* Line colors */
-  --color-text: #002147;       /* Default text matches primary */
-
-  --variant-dark {
-    --color-canvas: #000F21;   /* Deep Blue-Black */
-    --color-surface: #001835;  /* Slightly lighter Blue */
-    --color-border: #002B5B;
-    --color-text: #F8FAFC;
-  }
+  /* LIGHT MODE VARIABLES */
+  --color-canvas: #FFFFFF;
+  --color-surface: #F8F9FB;
+  --color-border: #E2E8F0;
+  --color-text: #002147;
 }
 
+/* THE SWAP LOGIC */
 @layer base {
+  :root.dark {
+    --color-canvas: #000B1A;
+    --color-surface: #00162B;
+    --color-border: #00264D;
+    --color-text: #F1F5F9;
+    --color-primary: #3B82F6; /* Lighter blue for dark mode */
+  }
+
   body {
-    @apply bg-canvas text-text transition-colors duration-300 font-sans;
+    @apply bg-canvas text-text transition-colors duration-500 font-sans;
   }
 }
