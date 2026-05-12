@@ -1,10 +1,12 @@
 import { resolve } from 'path'
-import { defineConfig } from 'electron-vite'
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite' // 1. Import this
 
 export default defineConfig({
-  main: {},
+  main: {
+    plugins: [externalizeDepsPlugin()] // This ensures electron-store isn't broken during build
+  },
   preload: {},
   renderer: {
     resolve: {

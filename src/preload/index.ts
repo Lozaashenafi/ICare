@@ -6,5 +6,8 @@ contextBridge.exposeInMainWorld('api', {
   // Tell the brain to pause/resume
   toggleTimer: () => ipcRenderer.send('toggle-timer'),
   // Tell the brain to trigger a break now (for testing)
-  startBreak: () => ipcRenderer.send('start-break')
+  startBreak: () => ipcRenderer.send('start-break'),
+  getStats: () => ipcRenderer.invoke('get-stats'),
+  getSettings: () => ipcRenderer.invoke('get-settings'),
+  saveSetting: (key: string, value: any) => ipcRenderer.send('save-setting', key, value),
 })

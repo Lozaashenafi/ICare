@@ -1,96 +1,117 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useTheme } from './context/ThemeContext';
+
+// Layout & UI Components
 import { Sidebar } from './components/layout/Sidebar';
 import { TimerHero } from './components/dashboard/TimerHero';
 import { WatcherCard, StatsCard } from './components/dashboard/SidebarCards';
+
+// Feature Pages
 import { HistoryPage } from './features/history/HistoryPage';
 import { StatsPage } from './features/stats/StatsPage';
+import { SettingsPage } from './features/settings/SettingsPage';
 
-// If you have these components created, import them here:
-// import { StatisticsPage } from './features/stats/StatisticsPage';
-// import { SettingsPage } from './features/settings/SettingsPage';
+// Lucide Icons (Optional for header)
+import { Bell, HelpCircle } from 'lucide-react';
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
+  const { theme } = useTheme(); // Uses the Provider we set up
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  useEffect(() => {
-    // Toggles the class on <html> tag
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+  /**
+   * Helper function to render the correct view based on the activeTab state.
+   * This keeps the return statement clean and readable.
+   */
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return (
+          <div className="flex flex-col xl:flex-row gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex-[2] min-w-0">
+              <TimerHero />
+            </div>
+            <div className="flex-1 min-w-[300px] space-y-6">
+              <WatcherCard />
+              <StatsCard />
+            </div>
+          </div>
+        );
+      case 'stats':
+        return <StatsPage />;
+      case 'history':
+        return <HistoryPage />;
+      case 'settings':
+        return <SettingsPage />;
+      default:
+        return <TimerHero />;
     }
-  }, [isDark]);
+  };
 
   return (
-    <div className="flex h-screen bg-canvas text-text transition-colors duration-500">
-      <Sidebar 
-        onToggleTheme={() => setIsDark(!isDark)} 
-        isDark={isDark} 
+    <div className="flex h-screen bg-canvas text-text transition-colors duration-500 overflow-hidden">
+      
+      {/* 1. Sidebar Navigation */}
+      <Sidebar
         activeTab={activeTab}
         onNavigate={setActiveTab}
       />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Secondary Navigation (Top Header) */}
-        <header className="h-20 flex items-center px-10 border-b border-border shrink-0">
+        
+        {/* 2. Top Navigation Bar */}
+        <header className="h-20 flex items-center justify-between px-10 border-b border-border bg-canvas/50 backdrop-blur-md shrink-0 z-10">
           <div className="flex gap-8 text-sm font-bold text-secondary uppercase tracking-widest">
+            {/* Contextual Tabs: Dashboard & History are usually paired */}
             <button 
               onClick={() => setActiveTab('dashboard')}
-              className={`pb-7 pt-1 transition-all border-b-2 ${activeTab === 'dashboard' ? 'text-primary border-primary' : 'border-transparent hover:text-primary'}`}
+              className={`pb-7 pt-1 transition-all border-b-2 outline-none ${
+                activeTab === 'dashboard' ? 'text-primary border-primary' : 'border-transparent hover:text-primary'
+              }`}
             >
-              Dashboard
+              Real-time
             </button>
             <button 
               onClick={() => setActiveTab('history')}
-              className={`pb-7 pt-1 transition-all border-b-2 ${activeTab === 'history' ? 'text-primary border-primary' : 'border-transparent hover:text-primary'}`}
+              className={`pb-7 pt-1 transition-all border-b-2 outline-none ${
+                activeTab === 'history' ? 'text-primary border-primary' : 'border-transparent hover:text-primary'
+              }`}
             >
-              History
+              Logs
             </button>
+          </div>
+
+          {/* Header Actions */}
+          <div className="flex items-center gap-5 text-secondary">
+            <div className="flex flex-col items-end mr-2 hidden sm:flex">
+              <span className="text-[10px] font-black uppercase tracking-tighter text-primary">System Status</span>
+              <span className="text-[10px] font-bold text-tertiary">Active & Watching</span>
+            </div>
+            <Bell size={20} className="cursor-pointer hover:text-primary transition-colors" />
+            <HelpCircle size={20} className="cursor-pointer hover:text-primary transition-colors" />
           </div>
         </header>
 
-        <main className="flex-1 p-10 overflow-y-auto">
+        {/* 3. Dynamic Main Content Area */}
+        <main className="flex-1 p-6 lg:p-10 overflow-y-auto custom-scrollbar bg-canvas">
           <div className="max-w-7xl mx-auto">
-            
-            {/* 1. Dashboard View */}
-            {activeTab === 'dashboard' && (
-              <div className="flex flex-col xl:flex-row gap-8 animate-in fade-in duration-500">
-                 <div className="flex-[2] min-w-0"><TimerHero /></div>
-                 <div className="flex-1 min-w-[300px] space-y-6">
-                    <WatcherCard />
-                    <StatsCard />
-                 </div>
-              </div>
-            )}
-
-            {/* 2. Statistics View */}
-            {activeTab === 'stats' && (
-              <div className="animate-in fade-in duration-500">
-                <StatsPage />
-               </div>
-            )}
-
-            {/* 3. History View */}
-            {activeTab === 'history' && (
-              <div className="animate-in fade-in duration-500">
-                <HistoryPage />
-              </div>
-            )}
-
-            {/* 4. Settings View */}
-            {activeTab === 'settings' && (
-              <div className="animate-in fade-in duration-500">
-                <h2 className="text-2xl font-bold mb-4">Settings</h2>
-                <div className="p-8 border-2 border-dashed border-border rounded-xl">
-                  <p className="text-secondary">App configuration and user preferences go here.</p>
-                </div>
-              </div>
-            )}
-
+            {renderContent()}
           </div>
         </main>
-        
+
+        {/* 4. Global Status Footer */}
+        <footer className="h-10 border-t border-border px-10 flex items-center justify-between text-[9px] text-secondary font-mono uppercase tracking-[0.2em] bg-surface/30">
+          <div>
+            ScreenSavage <span className="text-primary font-bold">v1.0.4</span>
+          </div>
+          <div className="flex gap-6">
+            <span>Mode: <span className={theme === 'dark' ? 'text-amber-400' : 'text-primary'}>{theme}</span></span>
+            <span className="flex items-center gap-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse" />
+              Engine Online
+            </span>
+          </div>
+        </footer>
+
       </div>
     </div>
   );

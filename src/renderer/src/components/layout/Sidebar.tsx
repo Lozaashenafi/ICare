@@ -1,14 +1,18 @@
 import React from 'react';
 import { LayoutGrid, LineChart, Settings, Eye, Moon, Sun, LogOut } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext'; // Ensure this path is correct
 
+// Only these two are needed as props now
 interface SidebarProps {
-  onToggleTheme: () => void;
-  isDark: boolean;
   activeTab: string;
   onNavigate: (tab: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onToggleTheme, isDark, activeTab, onNavigate }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onNavigate }) => {
+  // Grab theme logic directly from the Context Provider
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
+
   return (
     <aside className="w-20 lg:w-64 bg-surface border-r border-border flex flex-col h-screen p-4 lg:p-6 transition-all duration-500">
       
@@ -36,17 +40,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ onToggleTheme, isDark, activeT
         />
         <NavItem 
           icon={<Settings size={20} />}
-          label="settings"
+          label="Settings"
           active={activeTab === 'settings' }
           onClick={() => onNavigate('settings')} 
-          />
+        />
         <NavItem icon={<Eye size={20} />} label="Smart Eye Mode" />
       </nav>
 
       {/* Mood Toggle and Quit */}
       <div className="space-y-1 pt-4 border-t border-border">
         <NavItem 
-          onClick={onToggleTheme}
+          onClick={toggleTheme} // Uses the function from Context
           icon={isDark ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} />} 
           label={isDark ? "Light Mood" : "Black Mood"} 
         />
@@ -56,7 +60,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onToggleTheme, isDark, activeT
   );
 };
 
-const NavItem = ({ icon, label, active, onClick }: any) => (
+// Properly typed NavItem to avoid 'any'
+interface NavItemProps {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  onClick?: () => void;
+}
+
+const NavItem = ({ icon, label, active, onClick }: NavItemProps) => (
   <div 
     onClick={onClick}
     className={`flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${

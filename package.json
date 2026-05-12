@@ -24,8 +24,10 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@tailwindcss/vite": "^4.2.4",
+    "electron-store": "^11.0.2",
     "electron-updater": "^6.3.9",
     "lucide-react": "^1.14.0",
+    "react-router-dom": "^7.15.0",
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
