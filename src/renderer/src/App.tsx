@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTheme } from './context/ThemeContext';
 
 // Layout & UI Components
@@ -13,22 +13,59 @@ import { SettingsPage } from './features/settings/SettingsPage';
 
 // Lucide Icons (Optional for header)
 import { Bell, HelpCircle } from 'lucide-react';
+import { RoastPopup } from './features/break/RoastPopup';
 
 function App() {
-  const { theme } = useTheme(); // Uses the Provider we set up
+  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // --- REAL BACKEND STATE ---
+  const [seconds, setSeconds] = useState(1200); // 20 mins default
+  const [totalSeconds, setTotalSeconds] = useState(1200);
+  const [isPaused, setIsPaused] = useState(false);
 
-  /**
-   * Helper function to render the correct view based on the activeTab state.
-   * This keeps the return statement clean and readable.
-   */
+  const isBreakWindow = window.location.hash.includes('break');
+
+  useEffect(() => {
+    if (isBreakWindow) return; // Popups don't need to listen to the main timer
+
+    // 1. Initial Sync: Get the interval from user settings
+    window.api.getSettings().then((settings) => {
+      const initialSeconds = settings.interval * 60;
+      setSeconds(initialSeconds);
+      setTotalSeconds(initialSeconds);
+    });
+
+    // 2. Listen for "Ticks": This runs every time the Backend says "1 second passed"
+    const removeTickListener = window.api.onTimerTick((backendSeconds: number) => {
+      setSeconds(backendSeconds);
+    });
+
+    // 3. Listen for Pause status: Keep UI synced if tray icon pauses the timer
+    // (Note: You'll need to add onStatusChange to your preload if you want this)
+    
+    // Clean up: This stops the listener if the window closes (Prevents memory leaks)
+    return () => {
+      removeTickListener();
+    };
+  }, [isBreakWindow]);
+
+  if (isBreakWindow) {
+    return <RoastPopup />;
+  }
+
+  // --- REST OF YOUR UI LOGIC ---
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
         return (
           <div className="flex flex-col xl:flex-row gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex-[2] min-w-0">
-              <TimerHero />
+              <TimerHero 
+                seconds={seconds} 
+                totalSeconds={totalSeconds} 
+                isPaused={isPaused} 
+              />
             </div>
             <div className="flex-1 min-w-[300px] space-y-6">
               <WatcherCard />
@@ -43,7 +80,11 @@ function App() {
       case 'settings':
         return <SettingsPage />;
       default:
-        return <TimerHero />;
+        return <TimerHero 
+            seconds={seconds} 
+            totalSeconds={1200} 
+            isPaused={isPaused} 
+          />
     }
   };
 

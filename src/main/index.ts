@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { createMainWindow, getMainWindow } from './windows';
 import { createTray } from './tray';
 import { timerService } from './services/timerService';
-import { setupHandlers } from './ipc handlers';
+import { setupHandlers } from './ipcHandlers';
 
 // Prevent app from closing when windows are closed
 let isQuitting = false;

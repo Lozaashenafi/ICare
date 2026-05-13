@@ -55,6 +55,9 @@ export const createBreakWindow = () => {
     : `file://${join(__dirname, '../renderer/index.html')}#/break`;
 
   breakWindow.loadURL(breakURL);
+  breakWindow.on('closed', () => {
+    breakWindow = null;
+  });
   return breakWindow;
 };
 
