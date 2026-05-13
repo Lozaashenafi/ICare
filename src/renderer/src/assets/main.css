@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Kill scrollbars globally for the break window */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden !important; /* Forces NO SCROLL */
+  background: transparent !important; /* Ensures NO WHITE BACKGROUND */
+  height: 100%;
+  width: 100%;
+}
 @theme {
   /* Brand Constants */
   --color-primary: #002147;

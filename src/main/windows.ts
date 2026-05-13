@@ -6,6 +6,9 @@ let breakWindow: BrowserWindow | null = null;
 
 export const createMainWindow = () => {
   mainWindow = new BrowserWindow({
+    transparent: true, 
+    frame: false,      // MUST BE FALSE
+    hasShadow: false,  // Let CSS handle the shadow
     width: 1100,
     height: 850,
     show: false,
@@ -32,13 +35,14 @@ export const createBreakWindow = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
   breakWindow = new BrowserWindow({
+     transparent: true, // MUST BE TRUE
+    frame: false,      // MUST BE FALSE
+    hasShadow: false,  // Let CSS handle the shadow
     width: 500,
     height: 450,
     x: width - 520,
     y: 50,
-    frame: false,
     alwaysOnTop: true,
-    transparent: true,
     skipTaskbar: true,
     resizable: false,
     webPreferences: {
