@@ -6,17 +6,17 @@ let breakWindow: BrowserWindow | null = null;
 
 export const createMainWindow = () => {
   mainWindow = new BrowserWindow({
-    transparent: true, 
-    frame: false,      // MUST BE FALSE
-    hasShadow: false,  // Let CSS handle the shadow
     width: 1100,
     height: 850,
     show: false,
     autoHideMenuBar: true,
     titleBarStyle: 'hiddenInset', // Mac style clean look
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+    // 1. Path must be correct (pointing to the build folder)
+    preload: join(__dirname, '../preload/index.js'), 
+     sandbox: false,
+  contextIsolation: true, // Senior standard
+  nodeIntegration: false, // Senior standard
     }
   });
 

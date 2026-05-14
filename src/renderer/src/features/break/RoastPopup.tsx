@@ -15,22 +15,27 @@ export const RoastPopup = () => {
   const radius = 65;
   const circumference = 2 * Math.PI * radius;
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCount((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleClose();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const handleClose = (wasSuccessful: boolean) => {
+  if (wasSuccessful) {
+    window.api.completeBreak(); // Fixed typo from 'completeBrea'
+  } else {
+    window.api.skipBreak();
+  }
+};
 
-  const handleClose = () => (window.api as any).closeBreakWindow();
-
+useEffect(() => {
+  const timer = setInterval(() => {
+    setCount((prev) => {
+      if (prev <= 1) {
+        clearInterval(timer);
+        handleClose(true); // Auto-complete when timer hits 0
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+  return () => clearInterval(timer);
+}, []);
   return (
     /* We use h-full w-full and overflow-hidden to prevent any scrolling */
     <div className="h-full w-full flex items-center justify-center bg-transparent overflow-hidden select-none font-sans">
@@ -43,11 +48,11 @@ export const RoastPopup = () => {
 
         {/* Close Button */}
         <button 
-          onClick={handleClose}
-          className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 transition-all text-white/20 hover:text-white"
-        >
-          <X size={18} />
-        </button>
+  onClick={() => handleClose(false)} // User explicitly skipped
+  className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 transition-all text-white/20 hover:text-white"
+>
+  <X size={18} />
+</button>
 
         {/* Mascot */}
         <div className="text-6xl mb-6 filter drop-shadow-lg animate-bounce">😤</div>

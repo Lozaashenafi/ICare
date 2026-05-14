@@ -30,7 +30,7 @@ export const SettingsPage: React.FC = () => {
 
       {/* System Settings */}
       <SettingSection title="System" icon={<Monitor size={18} />}>
-        <SettingToggle label="Launch on Boot" desc="Start ScreenSavage automatically." defaultChecked />
+        <SettingToggle label="Launch on Boot" desc="Start ICare automatically." defaultChecked />
         <SettingToggle label="Sound Effects" desc="Play a 'Ding' (or a scream) when time is up." defaultChecked />
         <SettingToggle label="Stay on Top" desc="Always show popups above other windows." />
       </SettingSection>

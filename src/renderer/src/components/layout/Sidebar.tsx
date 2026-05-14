@@ -21,7 +21,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onNavigate }) => {
         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20">
           S
         </div>
-        <h1 className="text-xl font-bold text-primary tracking-tight hidden lg:block">ScreenSavage</h1>
+        <h1 className="text-xl font-bold text-primary tracking-tight hidden lg:block">ICare</h1>
       </div>
 
       {/* Navigation */}

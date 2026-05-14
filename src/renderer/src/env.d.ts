@@ -1,21 +1,20 @@
-/// <reference types="vite/client" />
+// src/renderer/src/env.d.ts
 
-export interface ElectronAPI {
-  getSettings: () => Promise<{ interval: number }>;
+interface CustomAPI {
+  getSettings: () => Promise<any>;
   saveSetting: (key: string, value: any) => void;
   getStats: () => Promise<any>;
-  getHistory: () => Promise<any>;
+  getHistory: () => Promise<any[]>;
   toggleTimer: () => void;
   takeBreakNow: () => void;
   closeBreakWindow: () => void;
+  completeBreak: () => void;
+  skipBreak: () => void;
   onTimerTick: (callback: (seconds: number) => void) => () => void;
 }
 
-declare global {
-  interface Window {
-    api: ElectronAPI;
-  }
+interface Window {
+  // Use 'any' here as a fallback if the toolkit type is being stubborn, 
+  // but explicitly defining CustomAPI is the goal.
+  api: CustomAPI; 
 }
-
-export {};
-

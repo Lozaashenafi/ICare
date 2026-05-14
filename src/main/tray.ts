@@ -12,7 +12,7 @@ export const createTray = (mainWindow: BrowserWindow) => {
   tray = new Tray(icon);
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'ScreenSavage v1.0', enabled: false },
+    { label: 'ICare v1.0', enabled: false },
     { type: 'separator' },
     { label: 'Show Dashboard', click: () => mainWindow.show() },
     { label: 'Pause Timer', type: 'checkbox', click: (item) => {
@@ -25,7 +25,7 @@ export const createTray = (mainWindow: BrowserWindow) => {
     }}
   ]);
 
-  tray.setToolTip('ScreenSavage: Watching you...');
+  tray.setToolTip('ICare: Watching you...');
   tray.setContextMenu(contextMenu);
 
   tray.on('double-click', () => mainWindow.show());

@@ -27,8 +27,12 @@ function App() {
   const isBreakWindow = window.location.hash.includes('break');
 
   useEffect(() => {
+    
     if (isBreakWindow) return; // Popups don't need to listen to the main timer
-
+if (!window.api) {
+    console.warn("Waiting for bridge...");
+    return;
+  }
     // 1. Initial Sync: Get the interval from user settings
     window.api.getSettings().then((settings) => {
       const initialSeconds = settings.interval * 60;
@@ -142,7 +146,7 @@ function App() {
         {/* 4. Global Status Footer */}
         <footer className="h-10 border-t border-border px-10 flex items-center justify-between text-[9px] text-secondary font-mono uppercase tracking-[0.2em] bg-surface/30">
           <div>
-            ScreenSavage <span className="text-primary font-bold">v1.0.4</span>
+            ICare <span className="text-primary font-bold">v1.0.4</span>
           </div>
           <div className="flex gap-6">
             <span>Mode: <span className={theme === 'dark' ? 'text-amber-400' : 'text-primary'}>{theme}</span></span>

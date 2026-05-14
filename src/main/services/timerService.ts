@@ -12,23 +12,30 @@ class TimerService {
     this.startInterval();
   }
 
-  private startInterval() {
-    // Clear existing interval if it exists to prevent multiple timers
-    if (this.interval) clearInterval(this.interval);
+ private startInterval() {
+  if (this.interval) clearInterval(this.interval);
 
-    this.interval = setInterval(() => {
-      if (this.isPaused) return;
+  this.interval = setInterval(() => {
+    if (this.isPaused) return;
 
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-        // Update the UI
-        getMainWindow()?.webContents.send('timer:tick', this.timeLeft);
-      } else {
-        this.onTimerEnd();
+    const win = getMainWindow();
+
+    // CRITICAL FIX: Check if window exists and isn't destroyed
+    if (!win || win.isDestroyed()) {
+      return; 
+    }
+
+    if (this.timeLeft > 0) {
+      this.timeLeft--;
+      // Extra safety check for the web contents
+      if (!win.webContents.isDestroyed()) {
+        win.webContents.send('timer:tick', this.timeLeft);
       }
-    }, 1000);
-  }
-
+    } else {
+      this.onTimerEnd();
+    }
+  }, 1000);
+}
   private onTimerEnd() {
     // 1. Show the Roast Popup Window
     createBreakWindow();
@@ -52,11 +59,19 @@ class TimerService {
     getMainWindow()?.webContents.send('timer:tick', this.timeLeft);
   }
 
-  public togglePause(manualState?: boolean) {
-    this.isPaused = manualState !== undefined ? manualState : !this.isPaused;
-    return this.isPaused;
+public togglePause(manualState?: boolean) {
+  this.isPaused = manualState !== undefined ? manualState : !this.isPaused;
+  
+  // If we just paused, record it as a performance penalty
+  if (this.isPaused) {
+    const dateKey = new Date().toISOString().split('T')[0];
+    const current = store.get(`stats.${dateKey}`) || { completed: 0, skipped: 0, pauses: 0, totalSeconds: 0 };
+    current.pauses += 1;
+    store.set(`stats.${dateKey}`, current);
   }
-
+  
+  return this.isPaused;
+}
   // Helper to get current time (if needed for debugging)
   public getTimeLeft() {
     return this.timeLeft;
