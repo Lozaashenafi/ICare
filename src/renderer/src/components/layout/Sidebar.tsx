@@ -44,10 +44,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onNavigate }) => {
           active={activeTab === 'settings' }
           onClick={() => onNavigate('settings')} 
         />
-        <NavItem icon={<Eye size={20} />} label="Smart Eye Mode" />
+        <NavItem icon={<Eye size={20} />} label="Smart Eye Mode" 
+        active={activeTab === 'smart'} onClick={()=> onNavigate('smart')} />
       </nav>
 
-      {/* Mood Toggle and Quit */}
+      {/* Mood Toggle and Quit */}  
       <div className="space-y-1 pt-4 border-t border-border">
         <NavItem 
           onClick={toggleTheme} // Uses the function from Context

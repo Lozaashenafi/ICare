@@ -10,6 +10,7 @@ interface CustomAPI {
   closeBreakWindow: () => void;
   completeBreak: () => void;
   skipBreak: () => void;
+  saveAllSettings: (settings: any) => void; // <--- ADD THIS LINE
   onTimerTick: (callback: (seconds: number) => void) => () => void;
 }
 

@@ -5,6 +5,7 @@ console.log('%c [Preload] Bridge Initialized', 'color: #00E5C3; font-weight: bol
 
 const api = {
   getSettings: () => ipcRenderer.invoke('settings:get'),
+  saveAllSettings: (settings: any) => ipcRenderer.send('settings:save-all', settings),
   saveSetting: (key: string, value: any) => ipcRenderer.send('settings:save', key, value),
   getStats: () => ipcRenderer.invoke('stats:get'),
   getHistory: () => ipcRenderer.invoke('stats:get-history'),

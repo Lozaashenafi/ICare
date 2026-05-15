@@ -1,5 +1,5 @@
 
-import { ipcMain } from 'electron';
+import { ipcMain , app} from 'electron';
 import store, { recordBreak, recordPause } from './services/store'; // Import them here
 import { timerService } from './services/timerService';
 import { getBreakWindow } from './windows';
@@ -14,7 +14,22 @@ export const setupHandlers = () => {
   recordBreak('completed');
   getBreakWindow()?.close();
 });
+ipcMain.on('settings:save-all', (_, newSettings) => {
+  console.log('[Backend] Bulk saving settings:', newSettings);
+  
+  // 1. Update the store
+  store.set('settings', newSettings);
 
+  // 2. Refresh services that depend on these settings
+  if (timerService) {
+    timerService.resetTimer(); // Immediately updates the dashboard clock
+  }
+
+  // 3. Update OS settings (Boot)
+  if (newSettings.launchOnBoot !== undefined) {
+    app.setLoginItemSettings({ openAtLogin: newSettings.launchOnBoot });
+  }
+});
 ipcMain.on('break:skip', () => {
   recordBreak('skipped');
   getBreakWindow()?.close();
