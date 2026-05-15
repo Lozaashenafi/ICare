@@ -15,6 +15,8 @@ interface DailyStats {
 
 interface AppSchema {
   settings: {
+    userName: string; // Added this
+    userId: string;   // Added this
     interval: number;
     duration: number;
     theme: 'light' | 'dark';
@@ -30,6 +32,8 @@ const StoreClass = (typeof Store === 'function' ? Store : (Store as any).default
 const store = new StoreClass<AppSchema>({
   defaults: {
     settings: {
+      userName: "", 
+      userId: crypto.randomUUID(), // Generates a unique ID once
       interval: 20,
       duration: 20,
       theme: 'light',

@@ -14,10 +14,14 @@ import { SettingsPage } from './features/settings/SettingsPage';
 // Lucide Icons (Optional for header)
 import { Bell, HelpCircle } from 'lucide-react';
 import { RoastPopup } from './features/break/RoastPopup';
+import { Onboarding } from './features/onboarding/Onboarding';
+import { initTelemetry } from './services/telemetry';
 
 function App() {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [userName, setUserName] = useState<string | null>(null);
+
   
   // --- REAL BACKEND STATE ---
   const [seconds, setSeconds] = useState(1200); // 20 mins default
@@ -35,7 +39,12 @@ if (!window.api) {
   }
     // 1. Initial Sync: Get the interval from user settings
     window.api.getSettings().then((settings) => {
-      const initialSeconds = settings.interval * 60;
+  if (!settings.userName || settings.userName.trim() === "") {
+        setUserName(""); // This triggers the onboarding view
+      } else {
+        setUserName(settings.userName);
+        initTelemetry(settings.userId, settings.userName);
+      }      const initialSeconds = settings.interval * 60;
       setSeconds(initialSeconds);
       setTotalSeconds(initialSeconds);
     });
@@ -44,15 +53,23 @@ if (!window.api) {
     const removeTickListener = window.api.onTimerTick((backendSeconds: number) => {
       setSeconds(backendSeconds);
     });
-
-    // 3. Listen for Pause status: Keep UI synced if tray icon pauses the timer
-    // (Note: You'll need to add onStatusChange to your preload if you want this)
-    
-    // Clean up: This stops the listener if the window closes (Prevents memory leaks)
     return () => {
       removeTickListener();
     };
   }, [isBreakWindow]);
+
+ if (userName === null) {
+    return <div className="h-screen bg-canvas flex items-center justify-center text-primary font-bold uppercase tracking-widest animate-pulse">Initializing Watcher...</div>;
+  }
+
+  // 3. Show Onboarding if name is empty
+  if (userName === "") {
+    return <Onboarding onComplete={(name) => {
+      setUserName(name);
+      // Don't forget to trigger telemetry here too for new users!
+      window.api.getSettings().then(s => initTelemetry(s.userId, name));
+    }} />;
+  }
 
   if (isBreakWindow) {
     return <RoastPopup />;

@@ -27,6 +27,7 @@
     "electron-store": "^11.0.2",
     "electron-updater": "^6.3.9",
     "lucide-react": "^1.14.0",
+    "posthog-js": "^1.373.4",
     "react-router-dom": "^7.15.0",
     "tailwindcss": "^4.2.4"
   },

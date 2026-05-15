@@ -19,3 +19,14 @@ interface Window {
   // but explicitly defining CustomAPI is the goal.
   api: CustomAPI; 
 }
+
+
+interface ImportMetaEnv {
+  // This gives you autocomplete when you type 'import.meta.env.'
+  readonly VITE_POSTHOG_KEY: string;
+  // Add other variables here if you have them
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
