@@ -29,7 +29,7 @@ html, body {
     --color-surface: #00162B;
     --color-border: #00264D;
     --color-text: #F1F5F9;
-    --color-primary: #3B82F6; /* Lighter blue for dark mode */
+    --color-primary: #3b83f6a0; /* Lighter blue for dark mode */
   }
 
   body {

@@ -100,6 +100,15 @@ if (!window.api) {
         return <HistoryPage />;
       case 'settings':
         return <SettingsPage />;
+      case 'smart':
+        return <>
+        <div className="flex flex-col xl:flex-row gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex-1 min-w-[300px] space-y-6">  
+              coming soon...
+            </div>
+          </div>    
+        </>
+
       default:
         return <TimerHero 
             seconds={seconds} 
