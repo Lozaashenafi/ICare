@@ -14,22 +14,17 @@ export const setupHandlers = () => {
   recordBreak('completed');
   getBreakWindow()?.close();
 });
-ipcMain.on('settings:save-all', (_, newSettings) => {
-  console.log('[Backend] Bulk saving settings:', newSettings);
-  
-  // 1. Update the store
+ipcMain.on('settings:save-all', (event, newSettings) => {
   store.set('settings', newSettings);
-
-  // 2. Refresh services that depend on these settings
-  if (timerService) {
-    timerService.resetTimer(); // Immediately updates the dashboard clock
-  }
-
-  // 3. Update OS settings (Boot)
-  if (newSettings.launchOnBoot !== undefined) {
-    app.setLoginItemSettings({ openAtLogin: newSettings.launchOnBoot });
-  }
+  
+  // FORCE REFRESH: This ensures any other part of the app 
+  // (like the dashboard) gets the new data immediately
+  event.reply('settings:updated', newSettings); 
+  
+  if (timerService) timerService.resetTimer();
+  console.log("Settings successfully persisted to disk.");
 });
+
 ipcMain.on('break:skip', () => {
   recordBreak('skipped');
   getBreakWindow()?.close();
