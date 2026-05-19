@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
 import { X, Eye } from 'lucide-react';
 import { PERSONALITY_DATA } from '../../constants/personalities';
+import { MESSAGES } from '../../content/messages';
 
 export const RoastPopup = () => {
   const [count, setCount] = useState(20);
-  const [mascotName, setMascotName] = useState("The Watcher");
+  const [mascotName, setMascotName] = useState("");
   const [roastMessage, setRoastMessage] = useState("");
   const [userName, setUserName] = useState("Victim");
+  const [isSmartEye, setIsSmartEye] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const radius = 65;
@@ -20,25 +22,32 @@ export const RoastPopup = () => {
     }
   }, []);
 
-  const handleForceExit = () => {
-    window.api.completeBreak(); 
-  };
-
   useEffect(() => {
     const initializePopup = async () => {
       try {
+        if (!window.api) {
+          console.error("Popup: bridge not available");
+          setRoastMessage("Look away. Now.");
+          setIsLoaded(true);
+          return;
+        }
         const settings = await window.api.getSettings();
-        const selectedMascotKey = settings.mascot || 'watcher';
-        const mode = settings.isSavage ? 'savage' : 'gentle';
-        const name = settings.userName || "Victim";
+        const mascotKey = settings.mascot || 'watcher';
+        const style = settings.messageStyle || 'savage';
+        const name = settings.userName || 'Victim';
+        const smartEye = settings.smartEyeEnabled || false;
 
-        const mascotData = (PERSONALITY_DATA as any)[selectedMascotKey];
-        const possibleMessages = mascotData[mode];
-        const randomMsg = possibleMessages[Math.floor(Math.random() * possibleMessages.length)];
+        const mascotMeta = PERSONALITY_DATA[mascotKey];
+        const mascotMessages = MESSAGES[mascotKey];
+        const styleMessages = mascotMessages?.[style];
+        const fallbackMessages = mascotMessages?.savage;
+        const pool = styleMessages || fallbackMessages || ['Look away. Now.'];
+        const randomMsg = pool[Math.floor(Math.random() * pool.length)];
 
         setUserName(name);
-        setMascotName(mascotData.name);
+        setMascotName(mascotMeta?.name || 'The Watcher');
         setRoastMessage(randomMsg);
+        setIsSmartEye(smartEye);
         setIsLoaded(true);
       } catch (err) {
         console.error("Popup failed to load settings:", err);
@@ -66,15 +75,16 @@ export const RoastPopup = () => {
   if (!isLoaded) return null;
 
   return (
-    /* FULL SCREEN CONTAINER */
-    <div className="h-screen w-screen flex items-center justify-center bg-transparent overflow-hidden select-none font-sans relative">
+    <div className={`h-screen w-screen flex items-center justify-center overflow-hidden select-none font-sans relative ${isSmartEye ? 'bg-black/[0.03]' : 'bg-transparent'}`}>
       
-      {/* THE UI CARD (Centered) */}
+      {isSmartEye && (
+        <div className="absolute inset-0 bg-black/10 z-0 animate-in fade-in duration-700" />
+      )}
+
       <div className="relative w-[400px] bg-[#002147] border border-white/10 rounded-[40px] p-8 flex flex-col items-center shadow-2xl overflow-hidden z-10">
         
         <div className="absolute inset-0 bg-primary/5 blur-3xl -z-10" />
 
-        {/* CLOSE/SKIP BUTTON */}
         <button 
           onClick={() => handleClose(false)} 
           className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 transition-all text-white/20 hover:text-white z-20"
@@ -82,7 +92,6 @@ export const RoastPopup = () => {
           <X size={18} />
         </button>
 
-        {/* 1. RESTORED YOUR PREFERRED EMOJI */}
         <div className="text-6xl mb-6 animate-bounce">😤</div>
 
         <div className="text-center space-y-2 mb-8">
@@ -97,7 +106,6 @@ export const RoastPopup = () => {
           </p>
         </div>
 
-        {/* TIMER CIRCLE */}
         <div className="relative w-36 h-36 flex items-center justify-center mb-8">
           <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 150 150">
             <circle cx="75" cy="75" r={radius} stroke="rgba(255,255,255,0.05)" strokeWidth="6" fill="transparent" />
@@ -118,7 +126,6 @@ export const RoastPopup = () => {
           </div>
         </div>
 
-        {/* INSTRUCTION BADGE */}
         <div className="flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl">
           <Eye size={10} className="text-tertiary" />
           <span className="text-[8px] font-bold text-white/50 uppercase tracking-widest">
@@ -126,14 +133,6 @@ export const RoastPopup = () => {
           </span>
         </div>
       </div>
-
-      {/* 2. EMERGENCY UNLOCK AT THE BOTTOM OF SCREEN */}
-      <button 
-        onClick={handleForceExit}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 px-8 py-3 bg-red-600/20 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/30 rounded-2xl font-black z-[100] shadow-xl transition-all text-[10px] uppercase tracking-[0.2em] backdrop-blur-sm active:scale-95"
-      >
-        Emergency Unlock
-      </button>
       
     </div>
   );

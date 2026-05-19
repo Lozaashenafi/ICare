@@ -60,12 +60,14 @@ export const createBreakWindow = () => {
     hasShadow: false,
     skipTaskbar: true,
     
-    // THE LOCKDOWN: Only enable Kiosk if Smart Eye is true
-    kiosk: isSmartEye, 
-    enableLargerThanScreen: isSmartEye,
+    // Kiosk mode provides full system lockdown during Smart Eye breaks.
+    // The transparent + bg-black/[0.03] approach in RoastPopup.tsx
+    // prevents the black-screen issue by ensuring every pixel has non-zero
+    // alpha, so the OS still composites transparency correctly under kiosk.
+    kiosk: isSmartEye,
 
     webPreferences: {
-      preload: join(__dirname, '../preload/index.mjs'),
+      preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       contextIsolation: true
     }
@@ -75,12 +77,10 @@ export const createBreakWindow = () => {
   // This ensures it sits above the Start Menu, Taskbar, and other apps
   breakWindow.setAlwaysOnTop(true, 'screen-saver');
 
-  // 4. SMART EYE EXCLUSIVE LOGIC: Focus Thief
+  // 4. SMART EYE EXCLUSIVE LOGIC: Kiosk locks input + Focus backup
   if (isSmartEye) {
-    // Prevent switching workspaces/desktops
     breakWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
-    // Focus Thief: If user tries to click away, steal focus back instantly
     breakWindow.on('blur', () => {
       if (breakWindow && !breakWindow.isDestroyed()) {
         breakWindow.show();

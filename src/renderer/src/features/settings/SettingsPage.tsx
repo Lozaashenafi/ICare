@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, Monitor, User, Info, Save } from 'lucide-react';
-import { SettingRow, SettingToggle, SettingSlider, MascotPicker } from './SettingsComponents';
+import { SettingRow, SettingToggle, SettingSlider, MascotPicker, StyleSelector } from './SettingsComponents';
 import { useSettings } from '../../hooks/useSettings';
 
 export const SettingsPage: React.FC = () => {
@@ -43,18 +43,10 @@ export const SettingsPage: React.FC = () => {
           selected={settings.mascot} 
           onSelect={(id: string) => updateSetting('mascot', id)} 
         />
-        <SettingRow label="Humor Profile" desc="Roast Intensity.">
-           <div className="flex bg-surface p-1 rounded-2xl border border-border">
-              <button 
-                onClick={() => updateSetting('isSavage', true)}
-                className={`px-6 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${settings.isSavage ? 'bg-primary text-white shadow-md' : 'text-secondary'}`}
-              >Savage</button>
-              <button 
-                onClick={() => updateSetting('isSavage', false)}
-                className={`px-6 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${!settings.isSavage ? 'bg-primary text-white shadow-md' : 'text-secondary'}`}
-              >Gentle</button>
-           </div>
-        </SettingRow>
+        <StyleSelector
+          selected={settings.messageStyle || 'savage'}
+          onSelect={(val: string) => updateSetting('messageStyle', val)}
+        />
       </SettingSection>
 
       {/* 3. System */}

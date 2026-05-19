@@ -9,11 +9,6 @@ export const setupHandlers = () => {
   ipcMain.handle('stats:get', () => store.get('stats'));
   ipcMain.handle('stats:get-history', () => store.get('history'));
 
-  // Called from RoastPopup.tsx
-  ipcMain.on('break:complete', () => {
-  recordBreak('completed');
-  getBreakWindow()?.close();
-});
 ipcMain.on('settings:save-all', (event, newSettings) => {
   store.set('settings', newSettings);
   
@@ -38,11 +33,11 @@ ipcMain.on('break:skip', () => {
     timerService.forceBreak();
   });
 ipcMain.on('break:complete', () => {
+  recordBreak('completed');
   const win = getBreakWindow();
   if (win) {
-    // DESTROY is faster than CLOSE. It prevents the 3-minute hang.
-    win.destroy(); 
-    console.log("PC Unlocked Instantly.");
+    win.destroy();
+    console.log("Break completed — PC unlocked.");
   }
 });
   ipcMain.on('break:close', () => {

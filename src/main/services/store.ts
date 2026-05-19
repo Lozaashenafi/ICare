@@ -13,14 +13,16 @@ interface DailyStats {
   totalSeconds: number;
 }
 
+type MessageStyle = 'savage' | 'normal' | 'friendly' | 'motivational';
+
 interface AppSchema {
   settings: {
-    userName: string; // Added this
-    userId: string;   // Added this
+    userName: string;
+    userId: string;
     interval: number;
     duration: number;
     theme: 'light' | 'dark';
-    isSavage: boolean;
+    messageStyle: MessageStyle;
     smartEyeEnabled: boolean;
     mascot: string;
   };
@@ -38,7 +40,7 @@ const store = new StoreClass<AppSchema>({
       interval: 20,
       duration: 20,
       theme: 'light',
-      isSavage: true,
+      messageStyle: 'savage',
       smartEyeEnabled: false,
       mascot: 'watcher'
     },

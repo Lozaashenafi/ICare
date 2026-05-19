@@ -41,6 +41,37 @@ export const SettingSlider = ({ label, value, unit, desc, min, max, onChange }: 
   </SettingRow>
 );
 
+const STYLE_OPTIONS = [
+  { id: 'savage', label: 'Savage', desc: 'Aggressive roast' },
+  { id: 'normal', label: 'Normal', desc: 'Casual reminder' },
+  { id: 'friendly', label: 'Friendly', desc: 'Warm nudge' },
+  { id: 'motivational', label: 'Motivational', desc: 'Inspiring push' }
+];
+
+export const StyleSelector = ({ selected, onSelect }: { selected: string; onSelect: (id: string) => void }) => (
+  <div className="space-y-4">
+    <p className="text-[10px] text-secondary font-black uppercase tracking-[0.2em]">Message Style</p>
+    <div className="grid grid-cols-4 gap-3">
+      {STYLE_OPTIONS.map(s => (
+        <button
+          key={s.id}
+          onClick={() => onSelect(s.id)}
+          className={`p-3 rounded-2xl border-2 transition-all duration-300 text-center ${
+            selected === s.id
+              ? 'border-primary bg-primary/5 shadow-lg shadow-primary/5'
+              : 'border-border bg-transparent hover:border-primary/30'
+          }`}
+        >
+          <p className={`text-[10px] font-black uppercase tracking-tighter ${selected === s.id ? 'text-primary' : 'text-secondary'}`}>
+            {s.label}
+          </p>
+          <p className="text-[9px] text-secondary mt-0.5">{s.desc}</p>
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
 export const MascotPicker = ({ selected, onSelect }: any) => {
   const mascots = [
     { id: 'watcher', img: 'https://images.unsplash.com/photo-1541339907198-e08759dfc12e?w=100', name: 'The Watcher' },
