@@ -1,5 +1,5 @@
 
-import { ipcMain , app} from 'electron';
+import { ipcMain } from 'electron';
 import store, { recordBreak, recordPause } from './services/store'; // Import them here
 import { timerService } from './services/timerService';
 import { getBreakWindow } from './windows';
@@ -37,7 +37,14 @@ ipcMain.on('break:skip', () => {
   ipcMain.on('timer:trigger-break', () => {
     timerService.forceBreak();
   });
-
+ipcMain.on('break:complete', () => {
+  const win = getBreakWindow();
+  if (win) {
+    // DESTROY is faster than CLOSE. It prevents the 3-minute hang.
+    win.destroy(); 
+    console.log("PC Unlocked Instantly.");
+  }
+});
   ipcMain.on('break:close', () => {
     getBreakWindow()?.close();
   });

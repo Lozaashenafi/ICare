@@ -54,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onNavigate, userNam
           icon={isDark ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} />} 
           label={isDark ? "Light Mood" : "Black Mood"} 
         />
-        <NavItem icon={<LogOut size={20} />} label="Quit App" />
+        {/* <NavItem icon={<LogOut size={20} />} label="Quit App" /> */}
       </div>
     </aside>
   );

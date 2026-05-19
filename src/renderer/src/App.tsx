@@ -16,6 +16,7 @@ import { Bell, HelpCircle } from 'lucide-react';
 import { RoastPopup } from './features/break/RoastPopup';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { initTelemetry } from './services/telemetry';
+import { SmartEyePage } from './features/smart/SmartEyePage';
 
 function App() {
   const { theme } = useTheme();
@@ -103,13 +104,8 @@ function App() {
       case 'history': return <HistoryPage />;
       case 'settings': return <SettingsPage />;
       case 'smart':
-        return (
-          <div className="flex flex-col xl:flex-row gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex-1 min-w-[300px] space-y-6 text-secondary font-bold uppercase tracking-widest text-xs">  
-              Smart Eye Mode Coming Soon...
-            </div>
-          </div>    
-        );
+          return <SmartEyePage />;
+
       default:
         return <TimerHero seconds={seconds} totalSeconds={totalSeconds} isPaused={isPaused} />;
     }

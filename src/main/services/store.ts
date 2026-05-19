@@ -21,6 +21,7 @@ interface AppSchema {
     duration: number;
     theme: 'light' | 'dark';
     isSavage: boolean;
+    smartEyeEnabled: boolean;
     mascot: string;
   };
   stats: Record<string, DailyStats>; // Key is YYYY-MM-DD
@@ -38,6 +39,7 @@ const store = new StoreClass<AppSchema>({
       duration: 20,
       theme: 'light',
       isSavage: true,
+      smartEyeEnabled: false,
       mascot: 'watcher'
     },
     stats: {},
