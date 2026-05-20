@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutGrid, LineChart, Settings, Eye, Moon, Sun, LogOut, User } from 'lucide-react';
+import { LayoutGrid, LineChart, Settings, Eye, Moon, Sun,  User } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 interface SidebarProps {
@@ -17,10 +17,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onNavigate, userNam
       
       {/* Brand Logo */}
       <div className="flex items-center justify-center lg:justify-start gap-3 mb-10 px-2">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20">
-          S
+        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shadow-lg uppercase italic shadow-primary/20">
+          I
         </div>
-        <h1 className="text-xl font-bold text-primary tracking-tight hidden lg:block uppercase italic">ICare</h1>
+        <h1 className="text-xl font-bold text-primary tracking-tight hidden lg:block uppercase italic">Care</h1>
       </div>
 
       {/* Navigation */}

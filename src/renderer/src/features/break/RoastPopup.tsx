@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { X, Eye } from 'lucide-react';
 import { PERSONALITY_DATA } from '../../constants/personalities';
 import { MESSAGES } from '../../content/messages';
+import watcherVid from '../../assets/watcher.mp4'; // Import your video
 
 export const RoastPopup = () => {
   const [count, setCount] = useState(20);
@@ -91,9 +92,35 @@ export const RoastPopup = () => {
         >
           <X size={18} />
         </button>
+    {/* 1. DYNAMIC RECTANGULAR VIDEO DISPLAY */}
+    <div className="relative w-full max-w-[320px] h-24 mt-4 mb-4 group">
+      {/* The Screen Frame */}
+      <div className="w-full h-full rounded-2xl overflow-hidden border-4 border-white/10 shadow-2xl bg-black/40 relative">
+        <video
+          src={watcherVid}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover transition-all duration-1000 grayscale hover:grayscale-0"
+        />
+        
+        {/* Digital Overlay: Scanlines & Vignette */}
+        <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_4px,3px_100%] opacity-30" />
+        
+        {/* Subtle Inner Glow */}
+        <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_40px_rgba(0,0,0,0.6)]" />
 
-        <div className="text-6xl mb-6 animate-bounce">😤</div>
+        {/* Recording Indicator */}
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-0.5 bg-black/40 backdrop-blur-sm rounded-md border border-white/5">
+          <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+          <span className="text-[8px] font-black text-white/70 tracking-widest uppercase">REC</span>
+        </div>
+      </div>
 
+      {/* Outer Glow (Rectangular) */}
+      <div className="absolute -inset-2 rounded-[24px] bg-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10" />
+    </div>
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-2xl font-black italic tracking-tighter text-white uppercase">
             {mascotName}

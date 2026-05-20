@@ -1,27 +1,41 @@
-import { BrowserWindow, screen } from 'electron';
+import { BrowserWindow, screen, nativeImage } from 'electron';
 import { join } from 'path';
 import store from './services/store';
 
 let mainWindow: BrowserWindow | null = null;
 let breakWindow: BrowserWindow | null = null;
 
+// Helper to get the correct icon path based on environment
+const getIconPath = () => {
+  // Points to your resources folder
+  return join(__dirname, '../../resources/icon.png');
+};
+
+
 export const createMainWindow = () => {
+  const appIcon = nativeImage.createFromPath(getIconPath());
+
   mainWindow = new BrowserWindow({
     width: 1100,
     height: 850,
     show: false,
     autoHideMenuBar: true,
-    titleBarStyle: 'hiddenInset', // Mac style clean look
+    icon: appIcon, // SET ICON IN CONSTRUCTOR
+    titleBarStyle: 'hiddenInset',
     webPreferences: {
-    // 1. Path must be correct (pointing to the build folder)
-    preload: join(__dirname, '../preload/index.js'), 
-     sandbox: false,
-  contextIsolation: true, // Senior standard
-  nodeIntegration: false, // Senior standard
+      // Note: Use .mjs if your build folder uses ES modules, or stick to .js
+      preload: join(__dirname, '../preload/index.js'), 
+      sandbox: false,
+      contextIsolation: true,
+      nodeIntegration: false,
     }
   });
 
-  // Load URL or File
+  // LINUX FIX: Force the icon on the window instance
+  if (process.platform === 'linux') {
+    mainWindow.setIcon(appIcon);
+  }
+
   if (process.env.ELECTRON_RENDERER_URL) {
     mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
@@ -37,16 +51,15 @@ export const createMainWindow = () => {
  */
 export const createBreakWindow = () => {
   const display = screen.getPrimaryDisplay();
-  const { width, height } = display.bounds; // Total screen area
-  const { width: workWidth } = display.workAreaSize; // Area excluding taskbars
+  const appIcon = nativeImage.createFromPath(getIconPath());
+  
+  const { width, height } = display.bounds; 
+  const { width: workWidth } = display.workAreaSize; 
 
-  // 1. Fetch the user's Smart Eye preference from the store
   const settings = store.get('settings');
   const isSmartEye = settings?.smartEyeEnabled || false;
 
-  // 2. Configure window based on Smart Eye status
   breakWindow = new BrowserWindow({
-    // Logic: Full screen for Smart Eye, small box for standard mode
     width: isSmartEye ? width : 450,
     height: isSmartEye ? height : 550,
     x: isSmartEye ? 0 : workWidth - 470,
@@ -59,11 +72,9 @@ export const createBreakWindow = () => {
     movable: false,
     hasShadow: false,
     skipTaskbar: true,
+    icon: appIcon, // SET ICON FOR POPUP TOO
     
-    // Kiosk mode provides full system lockdown during Smart Eye breaks.
-    // The transparent + bg-black/[0.03] approach in RoastPopup.tsx
-    // prevents the black-screen issue by ensuring every pixel has non-zero
-    // alpha, so the OS still composites transparency correctly under kiosk.
+    // Kiosk logic for Smart Eye
     kiosk: isSmartEye,
 
     webPreferences: {
@@ -73,11 +84,13 @@ export const createBreakWindow = () => {
     }
   });
 
-  // 3. THE "SCREEN-SAVER" Z-INDEX
-  // This ensures it sits above the Start Menu, Taskbar, and other apps
+  // LINUX FIX for Popup
+  if (process.platform === 'linux') {
+    breakWindow.setIcon(appIcon);
+  }
+
   breakWindow.setAlwaysOnTop(true, 'screen-saver');
 
-  // 4. SMART EYE EXCLUSIVE LOGIC: Kiosk locks input + Focus backup
   if (isSmartEye) {
     breakWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
@@ -95,9 +108,8 @@ export const createBreakWindow = () => {
 
   breakWindow.loadURL(url);
 
-  // 5. SENIOR FAIL-SAFE: Automatic Force-Close
-  // If the React app glitches, the window will kill itself after 25 seconds
-  setTimeout(() => {
+  // Safety Fail-safe
+    setTimeout(() => {
     if (breakWindow && !breakWindow.isDestroyed()) {
       console.log("[Fail-safe] Break window timed out and self-destructed.");
       breakWindow.close();
@@ -107,8 +119,5 @@ export const createBreakWindow = () => {
   return breakWindow;
 };
 
-
-
 export const getMainWindow = () => mainWindow;
 export const getBreakWindow = () => breakWindow;
-

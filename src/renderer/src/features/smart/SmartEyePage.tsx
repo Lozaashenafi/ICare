@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, Monitor, MousePointer2, Lock } from 'lucide-react';
+import { ShieldAlert, Monitor,  Lock } from 'lucide-react';
 import { useSettings } from '../../hooks/useSettings';
 
 export const SmartEyePage: React.FC = () => {

@@ -1,4 +1,5 @@
 import { useAnalytics } from '../../hooks/useAnalytics';
+import watcherVid from '../../assets/watcher.mp4'; 
 
 export const WatcherCard = () => {
   const { performanceScore } = useAnalytics();
@@ -11,21 +12,35 @@ export const WatcherCard = () => {
   };
 
   return (
-    <div className="bg-surface border border-border rounded-[32px] p-8 text-center transition-all">
-      <div className="relative w-24 lg:w-32 mx-auto mb-6">
-        <div className="w-full h-full rounded-full overflow-hidden border-4 border-canvas shadow-inner">
-          <img 
-            src="https://images.unsplash.com/photo-1541339907198-e08759dfc12e?w=200" 
-            className={`w-full h-full object-cover transition-all duration-700 ${performanceScore < 50 ? 'sepia hue-rotate-180' : ''}`} 
+     <div className="bg-surface border border-border rounded-[32px] p-8 text-center transition-all duration-500 shadow-sm">
+      <div className="relative w-32 lg:w-40 mx-auto mb-6">
+        <div className="w-full h-full rounded-full overflow-hidden border-4 border-canvas shadow-inner bg-primary/10">
+          {/* 2. THE VIDEO ELEMENT */}
+          <video
+            src={watcherVid}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={`w-full h-full object-cover transition-all duration-1000 ${
+              performanceScore < 50 ? 'brightness-50 sepia hue-rotate-180 contrast-125' : 'brightness-90'
+            }`}
           />
+          
+          {/* Scanline overlay for a "Security Camera" feel */}
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-primary/5 to-transparent opacity-20 animate-pulse" />
         </div>
+
         {/* Performance Badge */}
-        <div className="absolute -bottom-2 right-0 bg-primary text-white text-[10px] px-2 py-1 rounded-lg font-bold">
+        <div className="absolute -bottom-2 right-0 bg-primary text-white text-[10px] px-2 py-1 rounded-lg font-black shadow-lg shadow-primary/30">
           {performanceScore}%
         </div>
       </div>
-      <h3 className="text-lg font-bold text-primary mb-1">The Watcher</h3>
-      <p className="text-secondary text-xs italic">"{getWatcherMessage()}"</p>
+      
+      <h3 className="text-lg font-bold text-primary mb-1 font-syne uppercase tracking-tighter">The Watcher</h3>
+      <p className="text-secondary text-xs italic leading-relaxed px-2">
+        "{getWatcherMessage()}"
+      </p>
     </div>
   );
 };

@@ -53,9 +53,10 @@ const store = new StoreClass<AppSchema>({
  * SENIOR LOGIC: Records a break event to the permanent JSON store
  */
 export const recordBreak = (status: 'completed' | 'skipped') => {
-  const now = new Date();
-  const dateKey = now.toISOString().split('T')[0]; // Format: 2024-05-14
-  
+  const d = new Date();
+  // MUST MATCH THE FRONTEND FORMAT 
+  const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
   // 1. Get existing stats or create fresh ones for today
   const allStats = store.get('stats') || {};
   const todayStats: DailyStats = allStats[dateKey] || { 

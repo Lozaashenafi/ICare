@@ -1,4 +1,5 @@
-// src/renderer/src/env.d.ts
+/// <reference types="vite/client" />
+import { ElectronAPI } from '@electron-toolkit/preload'
 
 interface CustomAPI {
   getSettings: () => Promise<any>;
@@ -10,21 +11,26 @@ interface CustomAPI {
   closeBreakWindow: () => void;
   completeBreak: () => void;
   skipBreak: () => void;
-  saveAllSettings: (settings: any) => void; // <--- ADD THIS LINE
+  saveAllSettings: (settings: any) => void;
   onTimerTick: (callback: (seconds: number) => void) => () => void;
 }
 
-interface Window {
-  // Use 'any' here as a fallback if the toolkit type is being stubborn, 
-  // but explicitly defining CustomAPI is the goal.
-  api: CustomAPI; 
+declare global {
+  interface Window {
+    // FIX: This solves the Versions.tsx "Property electron does not exist" error
+    electron: ElectronAPI; 
+    api: CustomAPI; 
+  }
 }
 
+// FIX: This solves the "Cannot find module ../../assets/watcher.mp4" error
+declare module '*.mp4' {
+  const src: string;
+  export default src;
+}
 
 interface ImportMetaEnv {
-  // This gives you autocomplete when you type 'import.meta.env.'
   readonly VITE_POSTHOG_KEY: string;
-  // Add other variables here if you have them
 }
 
 interface ImportMeta {

@@ -26,7 +26,7 @@ function App() {
   // --- REAL BACKEND STATE ---
   const [seconds, setSeconds] = useState(1200); 
   const [totalSeconds, setTotalSeconds] = useState(1200);
-  const [isPaused, setIsPaused] = useState(false);
+const [isPaused] = useState(false);
 
   // 1. DETECTION: Is this the Popup Window?
   const isBreakWindow = window.location.hash.includes('break');

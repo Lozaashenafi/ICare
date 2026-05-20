@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, Monitor, User, Info, Save } from 'lucide-react';
-import { SettingRow, SettingToggle, SettingSlider, MascotPicker, StyleSelector } from './SettingsComponents';
+import {  SettingToggle, SettingSlider, MascotPicker, StyleSelector } from './SettingsComponents';
 import { useSettings } from '../../hooks/useSettings';
 
 export const SettingsPage: React.FC = () => {

@@ -1,9 +1,54 @@
 {
-  "name": "eyejoker-pro",
+  "name": "icare",
+  "productName": "ICare",
   "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "Professional eye-care and productivity companion.",
   "main": "./out/main/index.js",
-  "author": "example.com",
+ "author": {
+  "name": "Loza Ashenafi",
+  "email": "lozaashenafi@gmail.com"
+},
+  "build": {
+    "appId": "com.icare.app",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": ["nsis"],
+      "icon": "resources/icon.ico"
+    },
+    "mac": {
+  "category": "public.app-category.healthcare-fitness",
+  "target": [
+    {
+      "target": "dmg",
+      "arch": ["x64", "arm64"] 
+    },
+    {
+      "target": "zip",
+      "arch": ["x64", "arm64"]
+    }
+  ],
+  "icon": "resources/icon.png",
+  "hardenedRuntime": true,
+  "gatekeeperAssess": false,
+  "extendInfo": {
+    "NSAppleEventsUsageDescription": "ICare needs permission to manage breaks.",
+    "NSCameraUsageDescription": "ICare uses the camera for Smart Eye detection."
+  }
+},
+"dmg": {
+  "contents": [
+    { "x": 410, "y": 150, "type": "link", "path": "/Applications" },
+    { "x": 130, "y": 150, "type": "file" }
+  ],
+  "window": { "width": 540, "height": 380 }
+},
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "resources/icon.png"
+    }
+  },
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
