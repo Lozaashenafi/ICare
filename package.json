@@ -17,26 +17,14 @@
       "target": ["nsis"],
       "icon": "resources/icon.ico"
     },
-    "mac": {
-  "category": "public.app-category.healthcare-fitness",
-  "target": [
-    {
-      "target": "dmg",
-      "arch": ["x64", "arm64"] 
+  "mac": {
+      "category": "public.app-category.healthcare-fitness",
+      "target": ["zip"], 
+      "icon": "resources/icon.png",
+      "extendInfo": {
+        "LSUIElement": true 
+      }
     },
-    {
-      "target": "zip",
-      "arch": ["x64", "arm64"]
-    }
-  ],
-  "icon": "resources/icon.png",
-  "hardenedRuntime": true,
-  "gatekeeperAssess": false,
-  "extendInfo": {
-    "NSAppleEventsUsageDescription": "ICare needs permission to manage breaks.",
-    "NSCameraUsageDescription": "ICare uses the camera for Smart Eye detection."
-  }
-},
 "dmg": {
   "contents": [
     { "x": 410, "y": 150, "type": "link", "path": "/Applications" },
