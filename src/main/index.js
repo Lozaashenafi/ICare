@@ -8,6 +8,8 @@ import { setupHandlers } from './ipcHandlers';
 let isQuitting = false;
 
 app.whenReady().then(() => {
+    app.setName('ICare'); 
+
   const win = createMainWindow();
   win.on('close', (event) => {
     if (!isQuitting) {

@@ -18,6 +18,7 @@ export const createMainWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1100,
     height: 850,
+    title: "ICare", 
     show: false,
     autoHideMenuBar: true,
     icon: appIcon, // SET ICON IN CONSTRUCTOR

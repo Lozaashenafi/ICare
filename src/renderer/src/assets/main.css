@@ -25,12 +25,17 @@ html, body {
 /* THE SWAP LOGIC */
 @layer base {
   :root.dark {
-    --color-canvas: #000B1A;
+    --color-canvas: #001a39;
+    --color-surface: #002147;
+    --color-border: #334d6c;
+    --color-text: #e6e9ed;
+    --color-primary: #667a91; /* Lighter blue for dark mode */
+  }
+  /* --color-canvas: #000B1A;
     --color-surface: #00162B;
     --color-border: #00264D;
     --color-text: #F1F5F9;
-    --color-primary: #3b83f6a0; /* Lighter blue for dark mode */
-  }
+    --color-primary: #3b83f6a0;  */
 
   body {
     @apply bg-canvas text-text transition-colors duration-500 font-sans;

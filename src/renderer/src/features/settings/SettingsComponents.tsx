@@ -74,9 +74,9 @@ export const StyleSelector = ({ selected, onSelect }: { selected: string; onSele
 
 export const MascotPicker = ({ selected, onSelect }: any) => {
   const mascots = [
-    { id: 'watcher', img: 'https://images.unsplash.com/photo-1541339907198-e08759dfc12e?w=100', name: 'The Watcher' },
-    { id: 'joker', img: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=100', name: 'Savage Joker' },
-    { id: 'robot', img: 'https://images.unsplash.com/photo-1546776310-eef45dd6d63c?w=100', name: 'Unit 404' }
+    { id: 'watcher', name: 'The Watcher' },
+    { id: 'joker', name: 'Savage Joker' },
+    { id: 'robot', name: 'Unit 404' }
   ];
 
   return (
@@ -91,7 +91,6 @@ export const MascotPicker = ({ selected, onSelect }: any) => {
               selected === m.id ? 'border-primary bg-primary/5 shadow-lg shadow-primary/5' : 'border-border bg-transparent hover:border-primary/30'
             }`}
           >
-            <img src={m.img} className={`w-14 h-14 rounded-2xl mx-auto mb-3 object-cover transition-transform duration-500 group-hover:scale-110 ${selected === m.id ? '' : 'grayscale'}`} />
             <p className={`text-[10px] font-black uppercase tracking-tighter ${selected === m.id ? 'text-primary' : 'text-secondary'}`}>
               {m.name}
             </p>

@@ -10,7 +10,8 @@ const api = {
   getStats: () => ipcRenderer.invoke('stats:get'),
   getHistory: () => ipcRenderer.invoke('stats:get-history'),
   toggleTimer: () => ipcRenderer.send('timer:toggle'),
-  takeBreakNow: () => ipcRenderer.send('timer:trigger-break'),
+  takeBreakNow: () => ipcRenderer.send('timer:force-break'), 
+
   closeBreakWindow: () => ipcRenderer.send('break:close'),
   completeBreak: () => ipcRenderer.send('break:complete'),
   skipBreak: () => ipcRenderer.send('break:skip'),
@@ -18,6 +19,13 @@ const api = {
     const listener = (_event: any, value: number) => callback(value)
     ipcRenderer.on('timer:tick', listener)
     return () => ipcRenderer.removeListener('timer:tick', listener)
+  },
+ 
+   onPauseSync: (callback) => {
+    const listener = (_event: any, value: boolean) => callback(value);
+    ipcRenderer.on('timer:sync-state', listener);
+    // This return function is the "Unsubscribe" mechanism
+    return () => ipcRenderer.removeListener('timer:sync-state', listener);
   }
 }
 

@@ -2,7 +2,7 @@
 import { ipcMain } from 'electron';
 import store, { recordBreak, recordPause } from './services/store'; // Import them here
 import { timerService } from './services/timerService';
-import { getBreakWindow } from './windows';
+import { getBreakWindow, getMainWindow } from './windows';
 
 export const setupHandlers = () => {
   ipcMain.handle('settings:get', () => store.get('settings'));
@@ -25,11 +25,20 @@ ipcMain.on('break:skip', () => {
   getBreakWindow()?.close();
 });
 
-  ipcMain.on('timer:toggle', () => {
-    const isPaused = timerService.togglePause();
-    if (isPaused) recordPause(); // Track the penalty
-  });
-  ipcMain.on('timer:trigger-break', () => {
+ipcMain.on('timer:toggle', () => {
+  const newState = timerService.togglePause();
+  // Tell React to update UI
+  getMainWindow()?.webContents.send('timer:sync-state', newState);
+  // Tell Tray to update checkbox
+  ipcMain.emit('timer:state-changed', null, newState);
+});
+
+ipcMain.on('timer:external-toggle', (_, isPaused) => {
+  timerService.setPause(isPaused); // This now works!
+  getMainWindow()?.webContents.send('timer:sync-state', isPaused);
+});
+ipcMain.on('timer:force-break', () => {
+    console.log("Senior Log: Force Break Command Received");
     timerService.forceBreak();
   });
 ipcMain.on('break:complete', () => {

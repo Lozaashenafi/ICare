@@ -1,8 +1,7 @@
 import { getMainWindow, createBreakWindow } from '../windows';
-import store from './store';
+import store, { recordPause } from './store'; // Import recordPause helper
 
 class TimerService {
-  // 1. Declare the interval property (Fixes "Property interval does not exist")
   private timeLeft: number = 20 * 60;
   private isPaused: boolean = false;
   private interval: NodeJS.Timeout | null = null; 
@@ -12,67 +11,71 @@ class TimerService {
     this.startInterval();
   }
 
- private startInterval() {
-  if (this.interval) clearInterval(this.interval);
+  private startInterval() {
+    if (this.interval) clearInterval(this.interval);
 
-  this.interval = setInterval(() => {
-    if (this.isPaused) return;
+    this.interval = setInterval(() => {
+      const win = getMainWindow();
 
-    const win = getMainWindow();
+      // SAFETY CHECK: Fixes "Object has been destroyed"
+      if (!win || win.isDestroyed()) return; 
 
-    // CRITICAL FIX: Check if window exists and isn't destroyed
-    if (!win || win.isDestroyed()) {
-      return; 
-    }
+      if (this.isPaused) return;
 
-    if (this.timeLeft > 0) {
-      this.timeLeft--;
-      // Extra safety check for the web contents
-      if (!win.webContents.isDestroyed()) {
-        win.webContents.send('timer:tick', this.timeLeft);
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+        if (!win.webContents.isDestroyed()) {
+          win.webContents.send('timer:tick', this.timeLeft);
+        }
+      } else {
+        this.onTimerEnd();
       }
-    } else {
-      this.onTimerEnd();
-    }
-  }, 1000);
-}
+    }, 1000);
+  }
+
   private onTimerEnd() {
-    // 1. Show the Roast Popup Window
     createBreakWindow();
-    // 2. Reset clock for next cycle automatically
     this.resetTimer();
   }
 
-  // This handles the "Take Break Now" button from React
   public forceBreak() {
-    console.log("Savage Mode: Forcing break now.");
+    console.log("[Timer] Force triggering break.");
     this.onTimerEnd();
   }
 
   public resetTimer() {
-    // Accessing settings inside the 'settings' object as per your Store schema
     const settings = store.get('settings');
     const minutes = settings?.interval || 20;
     this.timeLeft = minutes * 60;
     
-    // Immediately tell the UI the new time
     getMainWindow()?.webContents.send('timer:tick', this.timeLeft);
   }
 
-public togglePause(manualState?: boolean) {
-  this.isPaused = manualState !== undefined ? manualState : !this.isPaused;
-  
-  // If we just paused, record it as a performance penalty
-  if (this.isPaused) {
-    const dateKey = new Date().toISOString().split('T')[0];
-    const current = store.get(`stats.${dateKey}`) || { completed: 0, skipped: 0, pauses: 0, totalSeconds: 0 };
-    current.pauses += 1;
-    store.set(`stats.${dateKey}`, current);
+  /**
+   * Toggles the current pause state and returns the new state.
+   * If it becomes paused, it records a performance penalty.
+   */
+  public togglePause() {
+    this.isPaused = !this.isPaused;
+    
+    if (this.isPaused) {
+      recordPause(); // Call the professional helper from store.ts
+    }
+    
+    return this.isPaused;
   }
-  
-  return this.isPaused;
-}
-  // Helper to get current time (if needed for debugging)
+
+  /**
+   * FIX: Added missing setPause method for external triggers (like Tray)
+   */
+  public setPause(state: boolean) {
+    this.isPaused = state;
+    if (this.isPaused) {
+      recordPause();
+    }
+    console.log(`[Timer] System Pause set to: ${this.isPaused}`);
+  }
+
   public getTimeLeft() {
     return this.timeLeft;
   }
