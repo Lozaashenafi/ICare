@@ -5,12 +5,9 @@ import store from './services/store';
 let mainWindow: BrowserWindow | null = null;
 let breakWindow: BrowserWindow | null = null;
 
-// Helper to get the correct icon path based on environment
 const getIconPath = () => {
-  // Points to your resources folder
   return join(__dirname, '../../resources/icon.png');
 };
-
 
 export const createMainWindow = () => {
   const appIcon = nativeImage.createFromPath(getIconPath());
@@ -21,10 +18,9 @@ export const createMainWindow = () => {
     title: "ICare", 
     show: false,
     autoHideMenuBar: true,
-    icon: appIcon, // SET ICON IN CONSTRUCTOR
+    icon: appIcon,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
-      // Note: Use .mjs if your build folder uses ES modules, or stick to .js
       preload: join(__dirname, '../preload/index.js'), 
       sandbox: false,
       contextIsolation: true,
@@ -32,7 +28,6 @@ export const createMainWindow = () => {
     }
   });
 
-  // LINUX FIX: Force the icon on the window instance
   if (process.platform === 'linux') {
     mainWindow.setIcon(appIcon);
   }
@@ -48,7 +43,7 @@ export const createMainWindow = () => {
 };
 
 /**
- * Creates the Break Overlay/Popup
+ * Creates the Break Overlay/Popup with "Ultimate Sticky" logic
  */
 export const createBreakWindow = () => {
   const display = screen.getPrimaryDisplay();
@@ -73,10 +68,12 @@ export const createBreakWindow = () => {
     movable: false,
     hasShadow: false,
     skipTaskbar: true,
-    icon: appIcon, // SET ICON FOR POPUP TOO
+    icon: appIcon,
     
-    // Kiosk logic for Smart Eye
-    kiosk: isSmartEye,
+    type: 'notification', 
+    
+    kiosk: isSmartEye, 
+    enableLargerThanScreen: true,
 
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -85,23 +82,44 @@ export const createBreakWindow = () => {
     }
   });
 
-  // LINUX FIX for Popup
   if (process.platform === 'linux') {
     breakWindow.setIcon(appIcon);
   }
 
-  breakWindow.setAlwaysOnTop(true, 'screen-saver');
+  // --- LAYER 1: HIGHEST LEVEL SETTING ---
+  // Using level 'screen-saver' with a sub-level of 10. 
+  // This is effectively the "God Mode" of window layering.
+ breakWindow.setAlwaysOnTop(true, 'screen-saver', 1);
 
-  if (isSmartEye) {
-    breakWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  // 2. Ensure it exists on all workspaces
+  breakWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
-    breakWindow.on('blur', () => {
-      if (breakWindow && !breakWindow.isDestroyed()) {
-        breakWindow.show();
-        breakWindow.focus();
+  // --- LAYER 3: THE RE-ASSERTION HAMMER ---
+  const aggressiveInterval = setInterval(() => {
+    if (breakWindow && !breakWindow.isDestroyed()) {
+      // Every 200ms, we tell the OS: "I am still the most important window"
+      breakWindow.setAlwaysOnTop(true, 'screen-saver', 1);
+      
+      // Forces the window to the absolute front of the Z-stack
+      breakWindow.moveTop();
+
+      if (isSmartEye) {
+        breakWindow.focus(); // Lockdown keyboard if Smart Eye is on
       }
-    });
-  }
+    } else {
+      clearInterval(aggressiveInterval);
+    }
+
+  }, 200);
+
+  
+
+  // --- LAYER 4: BLUR PROTECTION ---
+  breakWindow.on('blur', () => {
+    if (breakWindow && !breakWindow.isDestroyed()) {
+      breakWindow.showInactive();
+    }
+  });
 
   const url = process.env.ELECTRON_RENDERER_URL 
     ? `${process.env.ELECTRON_RENDERER_URL}#/break` 
@@ -109,16 +127,15 @@ export const createBreakWindow = () => {
 
   breakWindow.loadURL(url);
 
-  // Safety Fail-safe
-    setTimeout(() => {
+  // --- FAIL-SAFE DESTRUCTION ---
+  setTimeout(() => {
     if (breakWindow && !breakWindow.isDestroyed()) {
-      console.log("[Fail-safe] Break window timed out and self-destructed.");
-      breakWindow.close();
+      clearInterval(aggressiveInterval);
+      breakWindow.destroy(); 
     }
-  }, 25000); 
+  }, 22000); // 22 seconds
 
   return breakWindow;
 };
-
 export const getMainWindow = () => mainWindow;
 export const getBreakWindow = () => breakWindow;
