@@ -41,6 +41,19 @@ ipcMain.on('timer:force-break', () => {
     console.log("Senior Log: Force Break Command Received");
     timerService.forceBreak();
   });
+
+ipcMain.on('app:show-dashboard', () => {
+    const win = getMainWindow();
+    if (win) {
+      win.show();
+      win.focus();
+    }
+  });
+ipcMain.on('timer:external-toggle', (_, shouldPause) => {
+    timerService.setPause(shouldPause);
+    // Tell the React UI to update the button text/color
+    getMainWindow()?.webContents.send('timer:sync-state', shouldPause);
+  });
 ipcMain.on('break:complete', () => {
   recordBreak('completed');
   const win = getBreakWindow();

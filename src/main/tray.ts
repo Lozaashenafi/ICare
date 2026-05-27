@@ -9,35 +9,30 @@ export const createTray = (mainWindow: BrowserWindow) => {
 
   tray = new Tray(icon);
 
-  // Function to build the menu so we can refresh it if needed
   const buildMenu = (isPaused: boolean = false) => {
     return Menu.buildFromTemplate([
       { label: 'ICare v1.0.4', enabled: false },
       { type: 'separator' },
-      { label: 'Show Dashboard', click: () => mainWindow.show() },
+      
       { 
-        label: 'Pause Timer', 
+        label: isPaused ? 'Resume Timer' : 'Pause Timer', 
         type: 'checkbox', 
         checked: isPaused,
         click: (item) => {
-          // Tell the main process logic to toggle
-          // This will trigger the sync to the Dashboard UI
-          mainWindow.webContents.send('timer:external-toggle', item.checked);
+          ipcMain.emit('timer:external-toggle', null, item.checked);
         } 
       },
       { type: 'separator' },
-      { label: 'Quit App', click: () => app.exit(0) }
+      { label: 'Quit ICare', click: () => app.exit(0) }
     ]);
   };
 
-  tray.setToolTip('ICare is watching...');
+  tray.setToolTip('ICare: Keeping your eyes fresh');
   tray.setContextMenu(buildMenu(false));
 
-  // SENIOR MOVE: Listen for pause changes from the UI to update the Tray checkbox
+  // Sync Tray UI if pause state changes from the Dashboard
   ipcMain.on('timer:state-changed', (_event, isPaused) => {
-    if (tray) {
-      tray.setContextMenu(buildMenu(isPaused));
-    }
+    if (tray) tray.setContextMenu(buildMenu(isPaused));
   });
 
   tray.on('double-click', () => mainWindow.show());
