@@ -13,7 +13,6 @@ import { SettingsPage } from './features/settings/SettingsPage';
 import { SmartEyePage } from './features/smart/SmartEyePage';
 
 // Main Elements
-import { Bell } from 'lucide-react';
 import { RoastPopup } from './features/break/RoastPopup';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { initTelemetry } from './services/telemetry';
@@ -50,11 +49,10 @@ const [isPaused, setIsPaused] = useState(false); // Make sure you have this stat
     setSeconds(backendSeconds);
   });
 
-  // 3. Pause State Listener (FIXED)
-  const removeSyncListener = window.api.onPauseSync((isPausedBackend: boolean) => {
-    console.log("System Sync: Timer paused =", isPausedBackend);
-    setIsPaused(isPausedBackend); // This forces the "Continue" text to show
-  });
+const removeSyncListener = (window.api as any).onPauseSync((backendPausedState: boolean) => {
+  console.log("UI Sync: Timer is now", backendPausedState ? "Paused" : "Running");
+  setIsPaused(backendPausedState); 
+});
 
   // CLEANUP: Senior Dev standard to prevent memory leaks
   return () => {

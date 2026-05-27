@@ -1,5 +1,5 @@
 import { getMainWindow, createBreakWindow } from '../windows';
-import store, { recordPause } from './store'; // Import recordPause helper
+import store, { recordPause } from './store'; 
 
 class TimerService {
   private timeLeft: number = 20 * 60;

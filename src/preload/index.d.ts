@@ -14,7 +14,7 @@ declare global {
       completeBreak: () => void;
       skipBreak: () => void;
       onTimerTick: (callback: (seconds: number) => void) => () => void;
-  onPauseSync: (callback: (isPaused: boolean) => void) => () => void;
+      onPauseSync: (callback: (isPaused: boolean) => void) => () => void;
 
     }
   }

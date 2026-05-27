@@ -1,6 +1,6 @@
 
 import { ipcMain } from 'electron';
-import store, { recordBreak, recordPause } from './services/store'; // Import them here
+import store, { recordBreak } from './services/store'; // Import them here
 import { timerService } from './services/timerService';
 import { getBreakWindow, getMainWindow } from './windows';
 

@@ -43,13 +43,13 @@ export const MESSAGES: Record<
     ],
     friendly: [
       "Hey you, yes you. Take a breather. Your eyes have earned it.",
-      "Come on, give those eyes a vacation — even if it's just 20 seconds.",
+      "Come on, give those eyes a vacation  even if it's just 20 seconds.",
       "The code can wait. The memes can wait. Your eyes can't.",
       "Do yourself a favor: look at something beautiful. Or just a wall. I won't judge."
     ],
     motivational: [
       "Beast mode requires recovery mode. 20 seconds. Go.",
-      "You're in the top 1% just by using this app. Now prove it — take the break.",
+      "You're in the top 1% just by using this app. Now prove it  take the break.",
       "Greatness is built one disciplined pause at a time. Look away now.",
       "Work hard, rest hard. That's the motto. Reset those eyes, champ."
     ]
