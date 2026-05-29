@@ -4,36 +4,55 @@
   "version": "1.0.0",
   "description": "Professional eye-care and productivity companion.",
   "main": "./out/main/index.js",
- "author": {
-  "name": "Loza Ashenafi",
-  "email": "lozaashenafi@gmail.com"
-},
+  "author": {
+    "name": "Loza Ashenafi",
+    "email": "lozaashenafi@gmail.com"
+  },
   "build": {
     "appId": "com.icare.app",
     "directories": {
       "output": "dist"
     },
     "win": {
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "icon": "resources/icon.ico"
     },
-  "mac": {
+    "mac": {
       "category": "public.app-category.healthcare-fitness",
-      "target": ["zip"], 
+      "target": [
+        "zip"
+      ],
       "icon": "resources/icon.png",
       "extendInfo": {
-        "LSUIElement": true 
+        "LSUIElement": true
       }
     },
-"dmg": {
-  "contents": [
-    { "x": 410, "y": 150, "type": "link", "path": "/Applications" },
-    { "x": 130, "y": 150, "type": "file" }
-  ],
-  "window": { "width": 540, "height": 380 }
-},
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "icon": "resources/icon.png"
     }
   },
@@ -59,6 +78,7 @@
     "@tailwindcss/vite": "^4.2.4",
     "electron-store": "^11.0.2",
     "electron-updater": "^6.3.9",
+    "framer-motion": "^12.40.0",
     "lucide-react": "^1.14.0",
     "posthog-js": "^1.373.4",
     "react-router-dom": "^7.15.0",

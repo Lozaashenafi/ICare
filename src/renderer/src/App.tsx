@@ -15,7 +15,7 @@ import { SmartEyePage } from './features/smart/SmartEyePage';
 // Main Elements
 import { RoastPopup } from './features/break/RoastPopup';
 import { Onboarding } from './features/onboarding/Onboarding';
-import { initTelemetry } from './services/telemetry';
+import { initTelemetry , trackEvent} from './services/telemetry';
 
 function App() {
   const { theme } = useTheme();
@@ -32,16 +32,41 @@ const [isPaused, setIsPaused] = useState(false); // Make sure you have this stat
   if (isBreakWindow) {
     return <RoastPopup />;
   }
-
+useEffect(() => {
+  window.api.getSettings().then((s) => {
+    if (s.userName && s.userId) {
+      setUserName(s.userName);
+      
+      // Initialize PostHog
+      initTelemetry(s.userId, s.userName);
+      
+      // Track the session start
+      trackEvent('app_opened');
+    } else {
+      setUserName(""); 
+    }
+  });
+}, []);
  useEffect(() => {
   if (!window.api) return;
 
   // 1. Initial Data Sync
-  window.api.getSettings().then((settings) => {
-    setUserName(settings.userName || "");
-    const initialSeconds = settings.interval * 60;
+  window.api.getSettings().then((s) => {
+    setUserName(s.userName || "");
+    const initialSeconds = s.interval * 60;
     setSeconds(initialSeconds);
     setTotalSeconds(initialSeconds);
+    if (s.userName && s.userId) {
+      setUserName(s.userName);
+      
+      // Initialize PostHog
+      initTelemetry(s.userId, s.userName);
+      
+      // Track the session start
+      trackEvent('app_opened');
+    } else {
+      setUserName(""); 
+    }
   });
 
   // 2. Timer Tick Listener
