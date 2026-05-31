@@ -20,34 +20,13 @@
   
 </div>
 
----
-
-##  Table of Contents
-- [The Problem](#-the-problem)
-- [Why ICare?](#-why-icare)
-- [Key Features](#-key-features)
-- [Screenshots](#-screenshots)
-- [Installation](#-installation)
-  - [Windows](#-windows)
-  - [Linux](#-linux)
-- [Tech Stack](#️-tech-stack)
-- [Development](#-development)
-  - [Prerequisites](#prerequisites)
-  - [Running Locally](#running-locally)
-  - [Building](#building)
-- [Configuration](#-configuration)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
-
----
 
 ## The Problem
 Let’s face it — you’ve spent the last 4 hours staring at a screen without blinking. Your eyes are dry, your neck hurts, and you know the *20-20-20 rule* exists… but you ignore it anyway.
 
 Most eye-care apps are *too polite*. They send a gentle notification, you click "remind me later," and nothing changes. Your eyes lose. Every time.
 
----
+
 
 ## Why ICare?
 **ICare is not polite.**  
@@ -61,7 +40,7 @@ If you *still* refuse to rest your eyes, ICare will physically prevent you from 
 
 > *“Discipline is choosing what you want most over what you want now.”* – ICare, probably.
 
----
+
 
 ##  Key Features
 
@@ -75,10 +54,9 @@ If you *still* refuse to rest your eyes, ICare will physically prevent you from 
 | **Clean UI** | Built with Tailwind CSS and Framer Motion for smooth, modern animations. |
 | **Privacy First** | All settings and stats stored locally via `electron-store`. No cloud accounts required. |
 
----
+
 ## Screenshots
 
-|:-:|:-:|
 | ![](./resources/image1.jpg) | ![](./resources/image2.jpg) |
 | ![](./resources/image3.jpg) | ![](./resources/image4.jpg) |
 
