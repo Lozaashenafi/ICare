@@ -76,18 +76,17 @@ If you *still* refuse to rest your eyes, ICare will physically prevent you from 
 | **Privacy First** | All settings and stats stored locally via `electron-store`. No cloud accounts required. |
 
 ---
+## 📸 Screenshots
 
-## Screenshots
+> **Placeholder:** Add your screenshots to the `./screenshots` folder.  
+> For best results, use `.png` or `.jpg` and keep filenames consistent.
 
-> **Placeholder:** Create a `./screenshots` folder in the repository and add the following images:
+| Onboarding | Dashboard | Break Overlay | Analytics |
+|:----------:|:---------:|:-------------:|:---------:|
+| ![Onboarding](./resources/image1.jpg) | ![Dashboard](./resources/image2.jpg) | ![Break](./resources/image3.jpg) | ![Stats](./resources/image4.jpg) |
+| *First-run setup & personality selection* | *Main control panel with stats* | *Unskippable break screen* | *Compliance tracking* |
 
-| :---: | :---: | :---: |
-| ![Onboarding](./screenshots/image1.jpg) | ![](./screenshots/image2.jpg) | ![](./screenshots/image3.jpg) | ![](./screenshots/image4.jpg)
-| *First-run setup & personality selection* | *Main control panel with stats* | *Unskippable break screen* |
-
-*Need screenshots? Run the app locally and capture your own.*
-
----
+> **💡 Tip:** If images don't appear, verify the paths are correct and the files exist. Run `ls ./screenshots` to check.
 
 ## 🚀 Installation
 
