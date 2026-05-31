@@ -1,5 +1,5 @@
 {
-  "name": "icare",
+  "name": "icare-vision", 
   "productName": "ICare",
   "version": "1.0.0",
   "description": "Professional eye-care and productivity companion.",
@@ -8,6 +8,8 @@
     "name": "Loza Ashenafi",
     "email": "lozaashenafi@gmail.com"
   },
+  "license": "MIT",
+  "homepage": "https://icare-showcase.vercel.app/",
   "build": {
     "appId": "com.icare.app",
     "directories": {
@@ -53,10 +55,12 @@
         "AppImage",
         "deb"
       ],
-      "icon": "resources/icon.png"
+      "icon": "resources/icon.png",
+       "category": "Utility",
+      "maintainer": "Loza Ashenafi <lozaashenafi@gmail.com>"
     }
+    
   },
-  "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",

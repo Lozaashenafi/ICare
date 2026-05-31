@@ -172,13 +172,9 @@ const removeSyncListener = (window.api as any).onPauseSync((backendPausedState: 
         </main>
 
         <footer className="h-10 border-t border-border px-10 flex items-center justify-between text-[9px] text-secondary font-mono uppercase tracking-[0.2em] bg-surface/30">
-          <div>ICARE <span className="text-primary font-bold">V1.0.4</span></div>
+          <div>ICARE <span className="text-primary font-bold">V1.0.0</span></div>
           <div className="flex gap-6">
             <span>MODE: <span className={theme === 'dark' ? 'text-amber-400' : 'text-primary'}>{theme}</span></span>
-            <span className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse" />
-              ENGINE ONLINE
-            </span>
           </div>
         </footer>
       </div>

@@ -4,16 +4,26 @@ import { createTray } from './tray';
 import { timerService } from './services/timerService';
 import { setupHandlers } from './ipcHandlers';
 
-// --- 1. SINGLE INSTANCE LOCK ---
-// This prevents multiple "ICare" icons from appearing in your top bar
+// 1. CRITICAL: Linux fixes must happen BEFORE the lock request
+// Add this at the very top, before Lock or App initialization
+if (process.platform === 'linux') {
+  // Force X11/XWayland instead of pure Wayland for stability in dev
+  process.env.ELECTRON_OZONE_PLATFORM_HINT = 'x11';
+  
+  app.disableHardwareAcceleration();
+  app.commandLine.appendSwitch('no-sandbox');
+  app.commandLine.appendSwitch('disable-gpu');
+  app.commandLine.appendSwitch('disable-software-rasterizer');
+}
+
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
-  // If another ICare is already running, kill this one immediately
+  console.log("⚠️ Another instance is already running. Quitting...");
   app.quit();
 } else {
-  // If someone tries to open a second ICare, just show the existing window
   app.on('second-instance', () => {
+    console.log("🔄 Second instance detected, focusing main window.");
     const win = getMainWindow();
     if (win) {
       if (win.isMinimized()) win.restore();
@@ -22,35 +32,34 @@ if (!gotTheLock) {
     }
   });
 
-  app.whenReady().then(() => {
-    app.setName('ICare');
-    const win = createMainWindow();
+ app.whenReady().then(() => {
+    console.log("🚀 App is ready. Initializing components...");
+    
+    try {
+      app.setName('ICare');
+      const win = createMainWindow();
 
-    // --- 2. THE "X" BUTTON LOGIC ---
-    // CHOICE A: If you want 'X' to fully QUIT the app (remove the bar icon):
-    win.on('closed', () => {
-      app.quit(); 
-    });
+      // Show the window immediately to bypass Wayland "ready-to-show" bugs
+      win.show(); 
+      console.log("✨ Window forced to show");
 
-    /* 
-    CHOICE B: (Commented out) If you wanted to hide to tray instead:
-    win.on('close', (event) => {
-        event.preventDefault();
-        win.hide();
-    });
-    */
+      win.on('closed', () => {
+        app.quit(); 
+      });
 
-    setupHandlers();
-    createTray(win);
-    timerService.init();
+      setupHandlers();
+      createTray(win);
+      timerService.init();
 
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
-    });
+      app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
+      });
+    } catch (error) {
+      console.error("❌ CRITICAL ERROR DURING INIT:", error);
+    }
   });
 }
 
-// Ensure all processes die when quitting
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();

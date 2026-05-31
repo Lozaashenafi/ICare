@@ -60,8 +60,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onNavigate, userNam
   );
 };
 
-// ... keep your NavItem component the same
-// Properly typed NavItem to avoid 'any'
 interface NavItemProps {
   icon: React.ReactNode;
   label: string;
@@ -74,7 +72,7 @@ const NavItem = ({ icon, label, active, onClick }: NavItemProps) => (
     onClick={onClick}
     className={`flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${
       active 
-        ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+        ? 'bg-primary text-white' 
         : 'text-secondary hover:bg-border/50 hover:text-primary'
     }`}
   >
