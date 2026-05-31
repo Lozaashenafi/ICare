@@ -79,8 +79,8 @@ If you *still* refuse to rest your eyes, ICare will physically prevent you from 
 ## Screenshots
 
 |:-:|:-:|
-| ![](./screenshots/image1.jpg) | ![](./screenshots/image2.jpg) |
-| ![](./screenshots/image3.jpg) | ![](./screenshots/image4.jpg) |
+| ![](./resources/image1.jpg) | ![](./resources/image2.jpg) |
+| ![](./resources/image3.jpg) | ![](./resources/image4.jpg) |
 
 ## 🚀 Installation
 
