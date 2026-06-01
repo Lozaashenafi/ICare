@@ -68,26 +68,20 @@ If you *still* refuse to rest your eyes, ICare will physically prevent you from 
 3. Launch ICare from the Start Menu or Desktop shortcut.
 4. Grant admin permissions if prompted (required for global overlay functionality).
 
+
 ### 🐧 Linux (Ubuntu/Debian)
-ICare is distributed as an AppImage. For Ubuntu 22.04+ you may need `libfuse2`.
+
+ICare is distributed as a `.deb` package for Debian-based systems.
 
 ```bash
-# 1. Download the AppImage (e.g., ICare-1.0.0.AppImage)
-# 2. Make it executable
-chmod +x ~/Downloads/ICare-1.0.0.AppImage
+# 1. Download the .deb package (e.g., icare_1.0.0_amd64.deb)
+#    from the releases page or website
 
-# 3. Install fuse dependency (if missing)
-sudo apt update && sudo apt install libfuse2 -y
+# 2. Install the package using dpkg
+sudo dpkg -i ~/Downloads/icare_1.0.0_amd64.deb
 
-# 4. (Optional) Create a desktop entry for your app launcher
-cat <<EOF > ~/.local/share/applications/icare.desktop
-[Desktop Entry]
-Name=ICare
-Exec=$HOME/Downloads/ICare-1.0.0.AppImage --no-sandbox
-Icon=utilities-eye
-Type=Application
-Categories=Utility;
-EOF
+# 3. Fix any missing dependencies
+sudo apt-get install -f -y
 
-# 5. Launch
-~/Downloads/ICare-1.0.0.AppImage --no-sandbox
+# 4. Launch ICare from your application menu or run:
+icare
